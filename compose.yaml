@@ -8,7 +8,7 @@ services:
         required: false
     environment:
       DJANGO_DEBUG: "True"
-      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1"
+      DJANGO_ALLOWED_HOSTS: "${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}"
       DJANGO_SECRET_KEY: "local-development-only-change-me"
       DATABASE_PATH: "/app/data/tasks.sqlite3"
     volumes:

@@ -12,6 +12,16 @@ docker compose up --build
 
 Open http://localhost:8000. The SQLite database is stored in the `task-data` Docker volume.
 
+### Open it on a phone on the same Wi-Fi or hotspot
+
+On the PC, run `ipconfig` and find the IPv4 address of the Wi-Fi adapter connected to the same network as the phone. Copy `.env.example` to `.env`, then add that address to `DJANGO_ALLOWED_HOSTS`, separated by a comma. For example:
+
+```text
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,10.0.0.25
+```
+
+Restart with `docker compose up --build`, then open `http://<PC-IPv4-address>:8000` on the phone. Do not use `localhost` on the phone; that refers to the phone itself. Both devices must be able to communicate on the same local network.
+
 ## Local Python
 
 The intended target is CPython 3.12.
