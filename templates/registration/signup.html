@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Create account — Taskboard{% endblock %}
+{% block content %}
+<section class="form-page">
+  <div class="form-card auth-card">
+    <p class="eyebrow">Get started</p>
+    <h1>Create account</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% if form.non_field_errors %}<div class="field-error">{{ form.non_field_errors }}</div>{% endif %}
+      <button class="button button-full" type="submit">Create account</button>
+    </form>
+    <p class="auth-link">Already registered? <a href="/accounts/login">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Taskboard{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Taskboard home">
+      <span class="brand-mark">T</span>
+      <span>Taskboard</span>
+    </a>
+    <nav class="account-nav" aria-label="Account">
+      {% if user.is_authenticated %}
+        <span class="user-pill">{{ user.username }}</span>
+        <form method="post" action="/accounts/logout">
+          {% csrf_token %}
+          <button class="button button-ghost" type="submit">Sign out</button>
+        </form>
+      {% else %}
+        <a class="button button-ghost" href="/accounts/login">Sign in</a>
+        <a class="button" href="/accounts/signup">Create account</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

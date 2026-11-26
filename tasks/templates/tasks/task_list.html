@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}My tasks — Taskboard{% endblock %}
+{% block content %}
+<section class="page-shell">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">{% if user.is_authenticated %}Account tasks{% else %}Private to this browser{% endif %}</p>
+      <h1>My tasks</h1>
+    </div>
+    <a class="button" href="/tasks/new">+ New task</a>
+  </div>
+
+  <form class="filters" method="get" aria-label="Filter tasks">
+    <label>Status
+      <select name="status">
+        <option value="">All</option>
+        <option value="open" {% if request.GET.status == "open" %}selected{% endif %}>Open</option>
+        <option value="complete" {% if request.GET.status == "complete" %}selected{% endif %}>Completed</option>
+      </select>
+    </label>
+    <label>Priority
+      <select name="priority">
+        <option value="">All</option>
+        <option value="high" {% if request.GET.priority == "high" %}selected{% endif %}>High</option>
+        <option value="medium" {% if request.GET.priority == "medium" %}selected{% endif %}>Medium</option>
+        <option value="low" {% if request.GET.priority == "low" %}selected{% endif %}>Low</option>
+      </select>
+    </label>
+    <label>Due
+      <select name="due">
+        <option value="">Any time</option>
+        <option value="today" {% if request.GET.due == "today" %}selected{% endif %}>Today</option>
+        <option value="overdue" {% if request.GET.due == "overdue" %}selected{% endif %}>Overdue</option>
+      </select>
+    </label>
+    <button class="button button-secondary" type="submit">Apply</button>
+  </form>
+
+  {% if tasks %}
+  <div class="task-grid">
+    {% for task in tasks %}
+    <article class="task-card {% if task.completed %}task-complete{% endif %}">
+      <div class="task-card-head">
+        <span class="priority priority-{{ task.priority }}">{{ task.priority }}</span>
+        {% if task.due_date %}<time datetime="{{ task.due_date|date:'Y-m-d' }}">{{ task.due_date|date:"M j" }}</time>{% endif %}
+      </div>
+      <h2>{{ task.title }}</h2>
+      {% if task.description %}<p class="task-description">{{ task.description }}</p>{% endif %}
+      <div class="task-actions">
+        <form method="post" action="/tasks/{{ task.id }}/complete">
+          {% csrf_token %}
+          <button class="button button-ghost" type="submit">{% if task.completed %}Reopen{% else %}Complete{% endif %}</button>
+        </form>
+        <a class="text-action" href="/tasks/{{ task.id }}/edit">Edit</a>
+        <form method="post" action="/tasks/{{ task.id }}/delete" onsubmit="return confirm('Delete this task?')">
+          {% csrf_token %}
+          <button class="text-action danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">✓</div>
+    <h2>No tasks yet</h2>
+    <p>Create a task to get started.</p>
+    <a class="button" href="/tasks/new">Create task</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

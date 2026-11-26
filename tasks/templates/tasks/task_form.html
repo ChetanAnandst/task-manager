@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{% if task %}Edit task{% else %}New task{% endif %} — Taskboard{% endblock %}
+{% block content %}
+<section class="form-page">
+  <div class="form-card">
+    <p class="eyebrow">{% if task %}Update{% else %}Create{% endif %}</p>
+    <h1>{% if task %}Edit task{% else %}New task{% endif %}</h1>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <label class="field">
+        <span>{{ field.label }}</span>
+        {{ field }}
+        {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+      </label>
+      {% endfor %}
+      <div class="form-actions">
+        <a class="button button-ghost" href="/">Cancel</a>
+        <button class="button" type="submit">{% if task %}Save changes{% else %}Create task{% endif %}</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
