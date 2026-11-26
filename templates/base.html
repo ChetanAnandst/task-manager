@@ -3,9 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
   <title>{% block title %}Taskboard{% endblock %}</title>
   {% load static %}
+  <script>
+    (() => {
+      const savedTheme = localStorage.getItem("taskboard-theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = savedTheme === "dark" || savedTheme === "light"
+        ? savedTheme
+        : (prefersDark ? "dark" : "light");
+    })();
+  </script>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'js/theme.js' %}" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -13,7 +24,13 @@
       <span class="brand-mark">T</span>
       <span>Taskboard</span>
     </a>
-    <nav class="account-nav" aria-label="Account">
+    <nav class="header-actions" aria-label="Main navigation">
+      <button class="button button-ghost theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.3A8.5 8.5 0 0 1 8.7 3.8 8.6 8.6 0 1 0 20.2 15.3Z"/></svg>
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+        <span data-theme-label>Dark mode</span>
+      </button>
+      <div class="account-nav">
       {% if user.is_authenticated %}
         <span class="user-pill">{{ user.username }}</span>
         <form method="post" action="/accounts/logout">
@@ -24,6 +41,7 @@
         <a class="button button-ghost" href="/accounts/login">Sign in</a>
         <a class="button" href="/accounts/signup">Create account</a>
       {% endif %}
+      </div>
     </nav>
   </header>
   <main>
